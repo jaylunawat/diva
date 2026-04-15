@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab Viva Q&A – All Experiments</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+
+  :root {
+    --bg: #0e0f13;
+    --surface: #16181f;
+    --card: #1c1f2a;
+    --border: #2a2d3a;
+    --accent: #f5c842;
+    --accent2: #4ecdc4;
+    --accent3: #ff6b6b;
+    --text: #e8e6df;
+    --muted: #8a8890;
+    --q-bg: #1a1d26;
+    --a-bg: #131620;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0e0f13 0%, #16181f 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 40px 32px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .header-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+
+  .header-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .badge-count {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--accent);
+    color: #000;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  /* Nav */
+  .nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+
+  .nav-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    display: flex;
+    gap: 2px;
+    white-space: nowrap;
+    padding: 8px 0;
+  }
+
+  .nav-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    padding: 6px 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--accent); background: rgba(245,200,66,0.07); }
+  .nav-btn.active { color: var(--accent); background: rgba(245,200,66,0.12); }
+
+  /* Main */
+  .main { max-width: 980px; margin: 0 auto; padding: 32px; }
+
+  /* Experiment Block */
+  .experiment {
+    margin-bottom: 56px;
+    scroll-margin-top: 110px;
+  }
+
+  .exp-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .exp-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: #000;
+    background: var(--accent);
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .exp-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .exp-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* QA Cards */
+  .qa-list { display: flex; flex-direction: column; gap: 14px; }
+
+  .qa-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .qa-card:hover { border-color: rgba(245,200,66,0.3); }
+
+  .qa-question {
+    padding: 14px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--q-bg);
+    user-select: none;
+  }
+
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(245,200,66,0.1);
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .q-text {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 14.5px;
+    flex: 1;
+  }
+
+  .q-arrow {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+    flex-shrink: 0;
+    transition: transform 0.25s;
+  }
+  .qa-card.open .q-arrow { transform: rotate(90deg); color: var(--accent); }
+
+  .qa-answer {
+    display: none;
+    padding: 16px 18px 18px 18px;
+    background: var(--a-bg);
+    border-top: 1px solid var(--border);
+    color: #ccc8c0;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .qa-card.open .qa-answer { display: block; }
+
+  .qa-answer strong { color: var(--accent2); font-weight: 600; }
+  .qa-answer em { color: var(--accent); font-style: italic; }
+  .qa-answer ul, .qa-answer ol { padding-left: 20px; margin: 8px 0; }
+  .qa-answer li { margin-bottom: 4px; }
+  .qa-answer .formula {
+    font-family: 'IBM Plex Mono', monospace;
+    background: rgba(78,205,196,0.08);
+    border-left: 3px solid var(--accent2);
+    padding: 10px 14px;
+    margin: 10px 0;
+    border-radius: 0 5px 5px 0;
+    font-size: 13px;
+    color: var(--accent2);
+  }
+  .qa-answer .note {
+    background: rgba(245,200,66,0.07);
+    border-left: 3px solid var(--accent);
+    padding: 8px 12px;
+    margin: 8px 0;
+    border-radius: 0 4px 4px 0;
+    font-size: 13px;
+    color: #d4c070;
+  }
+
+  /* Expand all btn */
+  .exp-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .btn-sm {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    margin-top: 24px;
+  }
+
+  @media (max-width: 600px) {
+    .header { padding: 20px 16px; }
+    .main { padding: 20px 16px; }
+    .nav { padding: 0 16px; }
+    .exp-title { font-size: 18px; }
+    .header-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-title">Lab Final Exam — Viva Q&amp;A</div>
+      <div class="header-sub">EN 226 / EN 310 · DESE, IIT Bombay · All 10 Experiments</div>
+    </div>
+    <div class="badge-count">120+ Questions</div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-inner" id="navInner"></div>
+</div>
+
+<div class="main" id="main"></div>
+
+<div class="footer">Click any question to reveal its answer · Good luck tomorrow!</div>
+
+<script>
+const experiments = [
+  {
+    id: "boiler",
+    num: "EXP 01",
+    title: "Boiler Efficiency Testing",
+    meta: "Fire Tube Boiler · Indirect Method · Flue Gas Losses",
+    qa: [
+      { q: "What is the difference between a fire tube boiler and a water tube boiler?", a: "In a <strong>fire tube boiler</strong>, hot flue gases flow through tubes that are surrounded by water in the shell. In a <strong>water tube boiler</strong>, water flows inside tubes and the hot gases surround the tubes. Fire tube boilers are used in industrial process heating; water tube boilers are used in high-pressure power plant applications." },
+      { q: "What are the two methods of assessing boiler efficiency?", a: "<strong>Direct Method:</strong> The heat gained by the working fluid (water/steam) is compared to the energy content of the boiler fuel. <br><br><strong>Indirect Method (Heat Loss Method):</strong> Efficiency = 100% minus all losses (flue gas losses, blow-down losses, surface losses, refuse losses). The indirect method is preferred because measurement errors have less impact on the final efficiency." },
+      { q: "Why is the indirect method preferred over the direct method?", a: "In the indirect method, errors in individual measurements do not significantly change the final efficiency value, making it more accurate. Additionally, it identifies and quantifies each type of loss, which is useful for diagnosing inefficiencies in the boiler." },
+      { q: "What losses are considered in indirect method efficiency calculation?", a: "<ul><li>Flue gas losses (dry flue gas loss + moisture loss)</li><li>Blow-down losses</li><li>Surface radiation/convection losses</li><li>Refuse losses (for solid fuels only)</li></ul> <div class='note'>In this experiment: blow-down and refuse losses are neglected (liquid fuel used).</div>" },
+      { q: "What is thermal efficiency of a boiler?", a: "Thermal efficiency is the percentage of heat input from fuel that is effectively utilized to generate steam. <div class='formula'>η = (Heat output in steam / Heat input from fuel) × 100%</div>" },
+      { q: "What is the role of excess air in boiler combustion?", a: "Excess air ensures complete combustion of fuel. However, too much excess air carries away more heat in the flue gases, increasing flue gas losses. The O₂ percentage in flue gas is measured to calculate the amount of excess air supplied." },
+      { q: "What is the theoretical air requirement for combustion of fuel oil?", a: "<div class='formula'>Air(th) = 11.59×C + 34.78×[H₂ − O₂/8] + 4.35×S (kg/kg of fuel)</div>where C, H₂, O₂, S are weight fractions of carbon, hydrogen, oxygen, and sulphur in the fuel." },
+      { q: "What is a 3-pass fire tube boiler?", a: "In a 3-pass fire tube boiler, flue gases make three passes through the boiler: (1st pass) through the furnace tube, (2nd pass) through a set of tubes in one direction, (3rd pass) back through another set of tubes. Multiple passes increase the heating surface area and improve heat transfer efficiency." },
+      { q: "What is the purpose of a forced draught (FD) fan and induced draught (ID) fan?", a: "<strong>FD fan</strong> (Forced Draught): Pushes fresh air into the furnace. <strong>ID fan</strong> (Induced Draught): Pulls flue gases out of the furnace through the chimney. Using both together is called <em>balanced draught</em>, which gives better control over combustion." },
+      { q: "Why is steam used as a heating fluid in industry?", a: "Water/steam is preferred because: (1) it evaporates well below the metallurgical limit of carbon steel (boiler material), (2) it has a very high latent heat of vaporization, carrying large amounts of energy per unit mass, (3) it condenses at constant temperature delivering heat uniformly, and (4) it is safe, cheap, and non-toxic." },
+      { q: "What is the role of a de-aerator in a boiler system?", a: "The de-aerator removes dissolved oxygen and other gases from the boiler feed water. Dissolved oxygen causes pitting corrosion in boiler tubes and pipes. In the de-aerator, condensate and low-pressure steam mix with the feed water, heating it and driving off dissolved gases." },
+      { q: "What is meant by 'heating surface' of a boiler?", a: "Heating surface is the area of the boiler where water is on one side and hot combustion gases are on the other side. Increasing the heating surface (by adding more tubes) improves heat transfer, causing faster steam generation and higher thermal efficiency." },
+    ]
+  },
+  {
+    id: "bomb",
+    num: "EXP 02",
+    title: "Bomb Calorimeter – Calorific Value",
+    meta: "Gross/Higher Calorific Value · Calibration · Benzoic Acid",
+    qa: [
+      { q: "What is calorific value of a fuel?", a: "Calorific value (CV) is the amount of heat released per unit mass of fuel when it is completely burned. It is expressed in kJ/kg or kcal/kg. There are two types: <strong>Higher Calorific Value (HCV/GCV)</strong> – includes latent heat of water vapour, and <strong>Lower Calorific Value (LCV/NCV)</strong> – excludes latent heat of water vapour." },
+      { q: "Why does a bomb calorimeter measure the Higher Calorific Value (HCV)?", a: "In a bomb calorimeter, combustion occurs in a <strong>closed system</strong>. The water formed during combustion condenses inside the bomb (it cannot escape as vapour), releasing its latent heat to the surroundings. Thus, the measured heat includes the latent heat of water condensation, giving the Higher (Gross) Calorific Value." },
+      { q: "What is the energy equivalent (Ccal) of a calorimeter? How is it determined?", a: "<strong>Energy Equivalent (Ccal)</strong> is the heat capacity of the entire calorimeter assembly (bomb + water + stirrer + thermometer). It is determined by <em>calibration</em> – burning a known mass of benzoic acid (whose CV = 26.38 kJ/g) and measuring the temperature rise: <div class='formula'>C<sub>cal</sub> = q / ΔT = (mass × 26.38 kJ/g) / ΔT (cal/°C)</div>" },
+      { q: "Why is benzoic acid used for calibration?", a: "Benzoic acid is used because: (1) its calorific value is precisely known (26.38 kJ/g), (2) it burns completely and cleanly in oxygen, (3) it is a stable solid that can be accurately weighed, and (4) it is not hygroscopic." },
+      { q: "What is the formula to calculate the calorific value of a fuel sample?", a: "<div class='formula'>CV = C<sub>cal</sub> × (T₂ − T₁) / m</div>where C<sub>cal</sub> = energy equivalent of calorimeter, T₂ = final temperature, T₁ = initial temperature, m = mass of fuel sample (g)." },
+      { q: "Why is oxygen filled at 35 bar in the bomb?", a: "High-pressure oxygen (35 bar) ensures that there is an excess of oxygen available for <strong>complete combustion</strong> of the fuel sample. Incomplete combustion would give an inaccurately low calorific value." },
+      { q: "What is the purpose of the fuse wire and cotton thread in the bomb?", a: "The <strong>fuse wire</strong> heats up when electric current passes through it (via the ignition system) and ignites the <strong>cotton thread</strong>, which in turn ignites the fuel sample in the crucible. This ensures reliable ignition of the sample inside the sealed bomb." },
+      { q: "What precautions must be taken during a bomb calorimeter experiment?", a: "<ul><li>Regular calibration of the calorimeter</li><li>Accurately weigh the sample (0.9–1.1 g)</li><li>Keep room temperature steady (no drafts)</li><li>Use exactly 2 L of distilled water</li><li>Clean the bomb thoroughly after each experiment</li><li>Avoid round-off errors in calculations</li></ul>" },
+      { q: "What is the difference between Gross Calorific Value and Net Calorific Value?", a: "<strong>GCV (HCV):</strong> Heat released when products of combustion are cooled to 25°C and water condenses — includes latent heat of steam condensation. <strong>NCV (LCV):</strong> GCV minus the latent heat of the water formed during combustion. NCV = GCV − 2442 × 9H (kJ/kg), where H is the hydrogen mass fraction in the fuel." },
+      { q: "Why must the temperature reading be taken at regular intervals (every 30 seconds)?", a: "To plot a <strong>Temperature vs. Time curve</strong>. This graph is used to accurately determine T₁ (initial stable temperature before combustion) and T₂ (final stable temperature after combustion), accounting for any heat exchange with the surroundings during the experiment." },
+    ]
+  },
+  {
+    id: "ci",
+    num: "EXP 03",
+    title: "CI Engine Testing with Diesel",
+    meta: "Willan's Line · Heat Balance · Diesel Engine Performance",
+    qa: [
+      { q: "What is the principle of Willan's Line method?", a: "Willan's Line method is used to determine the <strong>friction power</strong> of a CI engine. Fuel consumption rate is plotted against brake power at constant engine speed. The straight line (Willan's line) is extrapolated to zero fuel consumption; the negative x-intercept gives the friction power. At constant speed, friction power is assumed constant regardless of load." },
+      { q: "Why is Willan's Line method not applicable to SI engines?", a: "In SI engines, throttling is used to control power. At lower loads, the charge inducted is less (throttled), so the friction losses vary with load. In CI engines, the air intake remains nearly constant at a given speed (no throttling) — only fuel is varied — making friction power approximately constant, which is the key assumption of Willan's line." },
+      { q: "What is Brake Thermal Efficiency (BTE)?", a: "<div class='formula'>BTE = Brake Power / (ṁ_f × CV) × 100%</div>It represents how effectively the engine converts the chemical energy of the fuel into useful brake (shaft) power at the output." },
+      { q: "What is Mechanical Efficiency?", a: "<div class='formula'>η_mech = Brake Power / Indicated Power × 100%</div>It represents the fraction of power developed in the cylinder (indicated power) that reaches the output shaft after overcoming friction losses." },
+      { q: "What is Brake Specific Fuel Consumption (BSFC)?", a: "<div class='formula'>BSFC = ṁ_f / BP (kg/kWh)</div>It is the mass of fuel consumed per unit of brake power output per hour. Lower BSFC indicates a more fuel-efficient engine." },
+      { q: "What is Volumetric Efficiency? Why is it important?", a: "<div class='formula'>η_v = (2 × ṁ_a) / (ρ_a × V_d × N)</div>Volumetric efficiency measures how well the engine breathes — the ratio of actual air inducted to the theoretical maximum. Higher volumetric efficiency means more air (and thus more fuel) can be burned per cycle, producing more power." },
+      { q: "What is an orifice meter? Why is it used to measure air flow?", a: "An orifice meter is a flow measurement device — a plate with a calibrated hole placed in the air intake duct. The pressure drop across the orifice is measured using a manometer. Using Bernoulli's equation and the discharge coefficient (Cd = 0.7), the air mass flow rate can be calculated. It is simple, cheap, and reliable for measuring gas flow." },
+      { q: "How is the heat balance of the CI engine done?", a: "Total heat input from fuel = Brake Power + Heat carried by cooling water + Heat carried by exhaust gases + Unaccounted losses. <div class='formula'>Q_input = Q_BP + Q_water + Q_exhaust + Q_unaccounted</div>This shows how the fuel energy is distributed." },
+      { q: "What is the significance of the Air-Fuel (A/F) ratio in a diesel engine?", a: "The A/F ratio determines combustion quality. Diesel engines always run <em>lean</em> (excess air). The <strong>stoichiometric A/F ratio</strong> for diesel is ~14.5:1. Actual A/F is higher (15–70:1 depending on load). Too little air → incomplete combustion, black smoke. Too much air → dilution, cooling, reduced efficiency." },
+      { q: "What is the limitation of Willan's Line method?", a: "The fuel consumption vs. brake power plot has a slight curvature (not perfectly straight), and a straight line is only an approximation. Extrapolating a curved plot to the x-axis introduces error in determining friction power accurately." },
+      { q: "What is Indicated Power? How does it relate to Brake Power and Friction Power?", a: "<strong>Indicated Power (IP)</strong> is the power developed by combustion inside the cylinder. <strong>Brake Power (BP)</strong> is the useful power output at the shaft. <strong>Friction Power (FP)</strong> is the power lost to mechanical friction. <div class='formula'>IP = BP + FP</div>" },
+    ]
+  },
+  {
+    id: "pump",
+    num: "EXP 04",
+    title: "Centrifugal Pump – Series & Parallel",
+    meta: "Multistage Pump · Performance Curves · Head vs Discharge",
+    qa: [
+      { q: "What is the working principle of a centrifugal pump?", a: "A centrifugal pump works on the principle of <strong>forced vortex flow</strong>. An impeller rotating inside a casing imparts centrifugal force to the fluid. This increases the fluid's velocity and pressure. Fluid enters axially at the impeller eye and is discharged radially at the periphery at high pressure. The rise in pressure head = V²/2g = ω²r²/2g." },
+      { q: "When are pumps connected in series? When in parallel?", a: "<strong>Series connection:</strong> Used when a <em>higher head</em> is required with the same discharge. Each pump adds its head to the total head. <br><br><strong>Parallel connection:</strong> Used when a <em>higher discharge</em> is required at the same head. Total discharge is the sum of individual pump discharges." },
+      { q: "What is the difference between pump efficiency and overall efficiency?", a: "<strong>Pump efficiency (η_pump)</strong> = Hydraulic power output of pump / Shaft power input to pump. <br><br><strong>Overall efficiency (η_overall)</strong> = Hydraulic power output / Electrical power input to motor. It includes motor efficiency as well. <div class='formula'>η_overall = η_pump × η_motor</div>" },
+      { q: "What is Total Head in a centrifugal pump?", a: "<div class='formula'>H_total = Delivery head + Suction head + Velocity head + Friction head losses</div>In the experiment, total head is calculated from pressure gauge (delivery) and vacuum gauge (suction) readings, plus the height between gauges." },
+      { q: "What are the performance curves plotted for a centrifugal pump?", a: "<ul><li><strong>H vs Q</strong> (Head vs Discharge) — main performance curve</li><li><strong>P vs Q</strong> (Power vs Discharge) — for single stage</li><li><strong>η vs Q</strong> (Efficiency vs Discharge) — shows Best Efficiency Point (BEP)</li></ul>" },
+      { q: "What is the Best Efficiency Point (BEP)?", a: "BEP is the operating point where the pump achieves its <strong>maximum efficiency</strong>. Pumps should ideally be operated at or near BEP to minimize energy consumption, reduce wear, and avoid vibration/cavitation issues." },
+      { q: "What is cavitation in a centrifugal pump?", a: "Cavitation occurs when the local pressure at the pump inlet drops below the <strong>vapour pressure</strong> of the liquid. Vapour bubbles form, then collapse violently near the impeller surface, causing pitting, noise, vibration, and damage to the impeller." },
+      { q: "What is NPSH (Net Positive Suction Head)?", a: "NPSH is the minimum suction head required at the pump inlet to prevent cavitation. <strong>NPSH_available</strong> must always be greater than <strong>NPSH_required</strong> (given by manufacturer) for safe operation." },
+      { q: "How does pump speed affect its performance?", a: "According to <strong>Affinity Laws</strong>: Flow rate ∝ N, Head ∝ N², Power ∝ N³. Doubling the speed doubles the flow rate, quadruples the head, and increases power 8-fold. This is why variable speed drives save significant energy at partial loads." },
+      { q: "How is the discharge measured in the pump experiment?", a: "Discharge is measured using a <strong>measuring tank and stopwatch</strong>. The rise in water level (R₂ − R₁) over a measured time gives the volume collected. <div class='formula'>Q = A × (R₂ − R₁) / t (m³/s)</div>where A = area of measuring tank = 0.148 m²." },
+      { q: "What is a multistage centrifugal pump?", a: "A multistage centrifugal pump has two or more impellers mounted on the same shaft. When connected in series, each impeller adds to the pressure head, enabling very high heads to be achieved. When connected in parallel, the impellers together deliver a higher flow rate." },
+    ]
+  },
+  {
+    id: "lamps",
+    num: "EXP 05",
+    title: "Energy Consumption of Different Lamps",
+    meta: "Incandescent · CFL · Fluorescent · LED · Efficacy",
+    qa: [
+      { q: "What is the difference between efficiency and efficacy of a light source?", a: "<strong>Efficiency</strong> = Total light energy output / Total electrical energy input (dimensionless or %). <br><br><strong>Efficacy</strong> = Luminous flux output (lumens) / Electrical power input (watts) → units: lm/W. Efficacy is the more practical measure for comparing light sources." },
+      { q: "What is the working principle of an incandescent lamp?", a: "Electric current passes through a <strong>tungsten filament</strong>. Electrons in tungsten atoms are excited to higher energy levels by collision with current electrons, and emit visible light as they fall back. The filament is inside an evacuated or halogen-filled glass bulb to prevent oxidation. Only ~10% of input energy becomes light; the rest is lost as heat." },
+      { q: "What are the disadvantages of incandescent lamps?", a: "<ul><li>Very low lumen efficacy (~10–15 lm/W, only 10% conversion to light)</li><li>Short lifespan (~1000 hours)</li><li>Generates a lot of heat (90% energy wasted)</li><li>High operating cost</li></ul>" },
+      { q: "What is the working principle of a fluorescent lamp?", a: "A tube filled with mercury vapour and an inert gas (argon/xenon) at low pressure. Electric current heats the tungsten cathodes, which emit electrons by thermionic emission. These electrons ionize the mercury vapour, producing <strong>UV radiation</strong>. The UV radiation strikes a phosphor coating on the inner wall of the tube, which converts it to <strong>visible light</strong>." },
+      { q: "What is the role of the ballast in a fluorescent lamp?", a: "The ballast serves two purposes: (1) provides (along with the starter) the high voltage needed to ionize the gas and start the lamp, and (2) limits the current flowing through the lamp during steady operation (since ionized gas has negative resistance — current must be limited)." },
+      { q: "What are the advantages of an electronic ballast over an electromagnetic ballast?", a: "<ul><li>Higher efficiency (less power loss)</li><li>No flickering (operates at high frequency ~10–70 kHz)</li><li>No humming noise</li><li>Better power factor</li><li>Smaller size and lower weight</li><li>No stroboscopic effect</li></ul>" },
+      { q: "How does an LED produce light?", a: "An LED is a <strong>forward-biased PN junction semiconductor diode</strong>. When forward biased, electrons and holes recombine at the junction (active layer), emitting photons (light) with energy equal to the bandgap of the semiconductor. This process is called <strong>electroluminescence</strong>. White light is produced by combining red, green, blue LEDs or using a blue LED with a phosphor converter." },
+      { q: "What are the advantages of LED lighting?", a: "<ul><li>Very low power consumption</li><li>Very high efficacy (>100 lm/W)</li><li>Very long lifespan (>25,000 hours)</li><li>Very little heat loss</li><li>Design flexibility</li><li>Instant on, no warm-up needed</li><li>Directional light output</li></ul>" },
+      { q: "What is a CFL? How does it differ from a regular fluorescent tube?", a: "A <strong>Compact Fluorescent Lamp (CFL)</strong> is a fluorescent lamp designed to fit into holders originally designed for incandescent lamps (standard E27 base). The tube is folded or coiled to reduce size. The ballast is usually integrated into the lamp base. CFLs have much higher efficacy than incandescent lamps (~50–70 lm/W)." },
+      { q: "What is Power Factor? How is it calculated in the lamp experiment?", a: "<strong>Power Factor (PF)</strong> is the ratio of real power (W) to apparent power (VA). <div class='formula'>PF = cos φ = W / (V × I)</div>Electromagnetic ballasts have low PF (lagging) due to the inductive nature of the choke. Electronic ballasts have near-unity PF." },
+      { q: "What coating is used on the inner wall of fluorescent tubes? Why?", a: "The inner wall is coated with a <strong>phosphor</strong> (e.g., calcium halophosphate or rare-earth phosphors). Phosphors absorb the UV radiation (253.7 nm) emitted by mercury vapour and re-emit it as visible light through a process called <strong>fluorescence</strong>. Different phosphors produce different colour temperatures." },
+      { q: "Which lamp turns on at the lowest voltage and why?", a: "The <strong>incandescent lamp</strong> turns on at the lowest voltage because it works purely on resistive heating — the filament glows as soon as any current flows. Fluorescent lamps and LEDs require a minimum voltage for ionization (fluorescent) or forward bias threshold (LED) before they turn on." },
+    ]
+  },
+  {
+    id: "flame",
+    num: "EXP 06",
+    title: "Flame Speed Measurement",
+    meta: "Laminar Flame Velocity · Equivalence Ratio · Premixed Flames",
+    qa: [
+      { q: "What is laminar flame speed (velocity)?", a: "Laminar flame speed (S_L) is the velocity at which a <strong>planar flame front</strong> propagates through an <em>unburned, stationary, premixed combustible gas mixture</em> in a direction normal to its surface. It is a fundamental property of a fuel-oxidizer mixture, depending on fuel type, equivalence ratio, temperature, and pressure." },
+      { q: "What is a premixed flame?", a: "In a <strong>premixed flame</strong>, fuel and oxidizer are <em>thoroughly mixed before reaching the reaction zone</em>. Combustion occurs in a thin reaction zone that separates burned and unburned gases. Bunsen burner flames (blue inner cone) are premixed flames. They have two fundamental properties: adiabatic flame temperature and laminar flame velocity." },
+      { q: "What is equivalence ratio (Φ)?", a: "<div class='formula'>Φ = Stoichiometric A/F ratio / Actual A/F ratio</div><ul><li>Φ = 1 → stoichiometric (exactly right amount of air)</li><li>Φ &lt; 1 → lean mixture (excess air)</li><li>Φ &gt; 1 → rich mixture (excess fuel)</li></ul>Flame speed is maximum slightly above stoichiometric (rich side, Φ ≈ 1.05–1.1 for most fuels)." },
+      { q: "Explain the three flame regimes: Yellow Tipping, Lift-off, and Light Back.", a: "<ul><li><strong>Yellow Tipping:</strong> Insufficient air → incomplete combustion → yellow sooty tip. Increasing air removes yellow tip.</li><li><strong>Lift-off:</strong> Air velocity at burner mouth exceeds flame speed → flame lifts off the burner surface. Further increase extinguishes the flame.</li><li><strong>Light Back (Flashback):</strong> Low mixture velocity — flame propagates back into the burner tube, as flame speed exceeds flow velocity.</li></ul>" },
+      { q: "What is the composition of LPG used in this experiment and its density?", a: "LPG composition: <strong>50% Butane (C₄H₁₀) + 50% Propane (C₃H₈)</strong> by volume. <div class='formula'>ρ_LPG = 0.5 × ρ_butane + 0.5 × ρ_propane = 0.5 × 2.44 + 0.5 × 1.83 = 2.135 kg/m³ (at 25°C, 1 bar)</div>" },
+      { q: "How is average flame speed calculated?", a: "<div class='formula'>Flame Speed = Length of transparent pipe / Time taken by flame to travel the length</div>Multiple readings are taken and averaged. The transparent pipe has L = 5 m and D = 0.032 m." },
+      { q: "What factors affect laminar flame speed?", a: "<ul><li><strong>Equivalence ratio:</strong> Maximum near stoichiometric/slightly rich</li><li><strong>Fuel type:</strong> Hydrogen has very high flame speed; methane has lower</li><li><strong>Initial temperature:</strong> Higher temperature → faster diffusion → higher flame speed</li><li><strong>Pressure:</strong> Generally slightly decreases flame speed</li><li><strong>Diluents/inerts:</strong> Reduce flame speed</li></ul>" },
+      { q: "What is the stoichiometric combustion equation for propane and butane?", a: "<div class='formula'>C₃H₈ + 5O₂ → 3CO₂ + 4H₂O (Propane)</div><div class='formula'>C₄H₁₀ + 6.5O₂ → 4CO₂ + 5H₂O (Butane)</div>" },
+      { q: "What safety precaution must be followed regarding air flow rate?", a: "Do not exceed an air flow rate of more than <strong>40 LPM</strong>. High air flow rates can cause flame lift-off and extinction, and may also create dangerous conditions if unburned fuel accumulates." },
+      { q: "Why must the interface (flame front position) not be disturbed during the experiment?", a: "The transparent pipe is used to observe and time the propagation of the flame front. Any disturbance (vibration, air currents) would alter the flame front geometry or position, introducing error in measuring the time taken for the flame to travel the known pipe length." },
+    ]
+  },
+  {
+    id: "fuel",
+    num: "EXP 07",
+    title: "Fuel Property Testing",
+    meta: "Aniline Point · Cloud Point · Flash Point · Petrol vs Diesel",
+    qa: [
+      { q: "What is the Aniline Point of a fuel? What does it indicate?", a: "Aniline Point is the <strong>lowest temperature at which equal volumes of aniline and the fuel become completely miscible</strong>. <ul><li>Lower aniline point → higher aromatic content in fuel</li><li>Higher aniline point → higher paraffinic content</li></ul>For diesel, higher aniline point indicates higher Diesel Index, meaning better ignition quality (higher cetane number)." },
+      { q: "Why does petrol have a lower aniline point than diesel?", a: "Petrol has a higher aromatic content than diesel. Since aniline is itself aromatic, it mixes more readily with aromatic compounds. More aromatics → miscibility at lower temperature → lower aniline point." },
+      { q: "What is the Cloud Point of a fuel?", a: "Cloud Point is the temperature at which <strong>wax crystals begin to crystallize and separate</strong> from a fuel upon cooling, giving it a cloudy appearance. At cloud point, wax crystals can flow with fuel but may choke the fuel filter. More relevant for diesel in cold climates." },
+      { q: "What is Pour Point?", a: "Pour Point is the lowest temperature at which the fuel just ceases to flow (gels). It is slightly below the cloud point. Both cloud point and pour point are critical for diesel fuel in cold weather operation." },
+      { q: "What is CFPP (Cold Filter Plugging Point)?", a: "CFPP is the temperature at which the wax crystals that have formed are large enough to <strong>plug the fuel filter</strong>, starving the engine of fuel. CFPP lies between the cloud point and pour point and is the most practically important low-temperature property for diesel." },
+      { q: "What is Flash Point? How is it different from Fire Point?", a: "<strong>Flash Point:</strong> The minimum temperature at which a fuel gives off sufficient vapour to momentarily ignite (flash) when an external ignition source is applied. The vapour is not enough to sustain combustion. <br><br><strong>Fire Point:</strong> The temperature at which the fuel vapour ignites and sustains combustion for at least 5 seconds. Fire point > Flash point." },
+      { q: "Why does petrol have a much lower flash point than diesel?", a: "Petrol is more volatile — it gives off vapour even at very low temperatures (flash point ~ −40°C). Diesel is less volatile and needs to be heated to ~55–65°C before giving off enough vapour to flash. This is why petrol is a much greater fire hazard than diesel at room temperature." },
+      { q: "What apparatus is used to measure flash point in this experiment?", a: "<strong>Pensky-Martens Closed Cup Tester</strong> is used. It consists of a brass cup holding the fuel, closed with a lid. The fuel is heated at a rate of 1°C/minute. A test flame is applied at 1°C intervals by briefly opening the lid. The lowest temperature at which the vapour flashes is the closed cup flash point." },
+      { q: "Why is the closed cup method used rather than the open cup method for flash point?", a: "In the <strong>closed cup</strong> method, vapours cannot escape before the test flame is applied, giving results closer to actual hazardous storage conditions. It gives <em>lower flash point values</em> than the open cup method because vapour concentration builds up under the lid. It is the legally specified method for most fuels." },
+      { q: "What is the significance of Diesel Index?", a: "<div class='formula'>Diesel Index (DI) = (Aniline Point °F × API Gravity) / 100</div>DI indicates the ignition quality of diesel. Higher DI → higher cetane number → better auto-ignition quality → shorter ignition delay. Good diesel typically has DI > 50." },
+      { q: "What is the difference between Cetane Number and Octane Number?", a: "<strong>Cetane Number</strong> applies to <em>diesel</em> fuel. High cetane number = short ignition delay = good auto-ignition quality (desired in CI engines). <br><br><strong>Octane Number</strong> applies to <em>petrol</em> fuel. High octane number = high resistance to auto-ignition/knocking (desired in SI engines to prevent premature detonation)." },
+    ]
+  },
+  {
+    id: "morse",
+    num: "EXP 08",
+    title: "Morse Test on Petrol Engine",
+    meta: "Indicated Power · Mechanical Efficiency · Multi-cylinder",
+    qa: [
+      { q: "What is the Morse Test? What is its purpose?", a: "Morse Test is a method to determine the <strong>Indicated Power (IP)</strong> of each cylinder of a multi-cylinder engine and the overall <strong>mechanical efficiency</strong>. It involves running the engine at constant speed, cutting out each cylinder one at a time, and noting the drop in brake power while maintaining the same speed." },
+      { q: "What are the key assumptions of the Morse Test?", a: "<ul><li>At constant engine speed, <strong>friction power is constant</strong> regardless of the number of active cylinders</li><li>The throttle position is kept the same throughout</li><li>Cutting out one cylinder does not affect the friction of the remaining cylinders</li></ul>" },
+      { q: "How is the Indicated Power (IP) of cylinder 1 calculated?", a: "<div class='formula'>IP₁ = BP(all 3 cylinders) − BP(cylinders 2 & 3 only)</div>By cutting cylinder 1 and measuring the drop in brake power at constant speed, the IP of that cylinder is found because FP is assumed constant." },
+      { q: "How is Mechanical Efficiency calculated from the Morse Test?", a: "<div class='formula'>Total IP = IP₁ + IP₂ + IP₃</div><div class='formula'>FP = IP_total − BP_total</div><div class='formula'>η_mech = BP_total / IP_total × 100%</div>" },
+      { q: "How is a cylinder 'cut out' in the Morse Test?", a: "For a petrol (SI) engine, a cylinder is cut out by <strong>short-circuiting its spark plug</strong> — the plug no longer fires, so no combustion occurs in that cylinder. Alternatively, fuel supply to that cylinder can be cut off." },
+      { q: "Why must engine speed be kept constant during the Morse Test?", a: "Friction power is assumed to be a function of engine speed only, not load. If speed changes between readings, friction power would change, violating the key assumption of the test and making the IP calculation inaccurate." },
+      { q: "What is the difference between Indicated Power and Brake Power?", a: "<strong>Indicated Power (IP)</strong> is the power developed by the combustion gases inside the cylinder, calculated from the P-V diagram (pressure-volume). <br><strong>Brake Power (BP)</strong> is the net power available at the output shaft (crankshaft), measured by a dynamometer. <br><div class='formula'>BP = IP − FP (Friction Power)</div>" },
+      { q: "What type of dynamometer is used in this experiment?", a: "A <strong>rope brake dynamometer</strong> (or eddy current dynamometer in SI engine experiment). The brake power formula is: <div class='formula'>BP = 2π × N × W × r / 60,000 (kW)</div>where N = rpm, W = load (kg), r = dynamometer arm length (0.21 m)." },
+      { q: "What is the engine used in the Morse Test experiment?", a: "A <strong>Maruti Suzuki Alto 3-cylinder, 4-stroke, water-cooled petrol engine</strong>. Bore = 66.5 mm, Stroke = 72 mm. It is a multi-cylinder engine, which is a requirement for the Morse Test." },
+      { q: "What is the limitation of the Morse Test?", a: "The Morse Test gives only an <em>approximate</em> estimate of indicated power because: (1) cutting out a cylinder may slightly affect friction (piston still moves without combustion), (2) the assumption of constant friction power is not perfectly accurate, and (3) slight speed fluctuations may occur. It is not as accurate as using an indicator diagram from a pressure sensor." },
+    ]
+  },
+  {
+    id: "motor",
+    num: "EXP 09",
+    title: "Motor Efficiency",
+    meta: "Induction Machine · VFD · IE Efficiency Classes · Regenerative",
+    qa: [
+      { q: "What is the working principle of a squirrel cage induction motor (SCIM)?", a: "When 3-phase AC currents (120° apart in time) flow through stator windings (120° apart in space), a <strong>rotating magnetic field (RMF)</strong> is created. By Faraday's law, an EMF is induced in the short-circuited rotor conductors. The resulting rotor current interacts with the RMF to produce torque. The rotor always runs slightly slower than the RMF (<em>slip</em>), hence it is called an <em>asynchronous</em> machine." },
+      { q: "What is slip in an induction motor?", a: "<div class='formula'>Slip (s) = (N_s − N_r) / N_s</div>where N_s = synchronous speed = 120f/P (rpm), N_r = rotor speed. Slip is small at no load (~1%) and increases with load. At slip = 1 (standstill), starting conditions apply." },
+      { q: "What are the IE efficiency classes for induction motors?", a: "As per IEC/EN 60034-30-1:2014:<ul><li><strong>IE1</strong> – Standard Efficiency</li><li><strong>IE2</strong> – High Efficiency</li><li><strong>IE3</strong> – Premium Efficiency</li><li><strong>IE4</strong> – Super-Premium Efficiency</li></ul>Higher IE class = higher efficiency = lower running costs." },
+      { q: "What is a Variable Frequency Drive (VFD)?", a: "A VFD (also called inverter or drive) controls the speed and torque of an induction motor by varying the <strong>frequency and voltage</strong> of the power supply. It consists of a rectifier (AC→DC), DC bus, and inverter (DC→pulsed AC). The VFD allows the motor to operate at variable speeds efficiently." },
+      { q: "What is a regenerative drive setup? Why is it used?", a: "In this experiment, two VFDs are connected via a <strong>DC link</strong>. The 5 hp motor acts as a generator (load machine), feeding power back through the DC link to the 3 hp test motor, making the system <em>regenerative</em>. This means the net power drawn from the mains equals only the total system losses (not the full motor power), making testing energy-efficient." },
+      { q: "What are the four types of industrial loads tested in the motor efficiency experiment?", a: "<ul><li><strong>Constant power load</strong> (torque ∝ 1/N): e.g., veneer cutting, machine tools</li><li><strong>Constant torque load</strong>: e.g., conveyors, cranes, positive displacement pumps</li><li><strong>Torque proportional to speed</strong>: e.g., hydraulic pumps, rollers</li><li><strong>Torque proportional to N²</strong>: e.g., centrifugal pumps, fans, compressors</li></ul>" },
+      { q: "How is motor efficiency defined?", a: "<div class='formula'>η = Shaft output power / Electrical input power × 100%</div>More precisely: η = (Shaft power of test motor) / (Input power to VFD) × 100%. The power analyser reads net system losses since the system is regenerative." },
+      { q: "What is Modbus communication used for in this experiment?", a: "Modbus is a <strong>serial communication protocol</strong> used between the PLC (Programmable Logic Controller) and the VFDs. The PLC sends speed reference commands to the ACS380 (controlling the 3 hp test motor) and torque limit commands to the ACS560 (controlling the 5 hp load motor) via Modbus RTU protocol." },
+      { q: "What is a Master-Slave control architecture in this experiment?", a: "The PLC acts as the master. ACS380 is assigned as slave 1 and ACS560 as slave 2. The master PLC sends control commands (speed reference, torque limit, start/stop) to both VFD slaves. This centralized control ensures synchronized operation of both machines." },
+      { q: "Why is efficiency of a motor important from an energy perspective?", a: "Motors consume about <strong>70% of industrial electrical energy</strong>. Even a 1–2% improvement in motor efficiency can lead to significant energy and cost savings at scale. High-efficiency (IE3/IE4) motors justify higher upfront costs through lower electricity bills over their lifetime. VFDs further save energy at partial loads (especially for fan/pump loads where power ∝ N³)." },
+    ]
+  },
+  {
+    id: "si",
+    num: "EXP 10",
+    title: "SI Engine Performance Testing",
+    meta: "4-Stroke Petrol Engine · BTE · Volumetric Efficiency · Heat Balance",
+    qa: [
+      { q: "Explain the four strokes of a 4-stroke SI engine.", a: "<ol><li><strong>Intake (Suction):</strong> Piston moves down, intake valve opens — air-fuel mixture drawn into cylinder.</li><li><strong>Compression:</strong> Both valves closed, piston moves up — mixture compressed (~9:1 CR for petrol).</li><li><strong>Power (Expansion):</strong> Spark plug fires at TDC, mixture ignites, gases expand forcing piston down — power stroke.</li><li><strong>Exhaust:</strong> Exhaust valve opens, piston moves up — burnt gases pushed out.</li></ol>" },
+      { q: "What is an Eddy Current Dynamometer? How does it measure torque?", a: "An eddy current dynamometer loads the engine by generating eddy currents in a <strong>copper/steel rotor disc</strong> using electromagnets on the stator. The eddy currents oppose rotor motion (Lenz's law), providing a controllable braking torque. Torque is measured using a rope brake arrangement, and BP = 2πNWr/60,000 kW." },
+      { q: "What is Brake Thermal Efficiency (BTE)?", a: "<div class='formula'>η_BTE = BP / (Wf × CV) × 100%</div>It represents the fraction of fuel's chemical energy converted to useful shaft work. Typical values for petrol engines: 25–35%." },
+      { q: "What is Specific Fuel Consumption (SFC)?", a: "<div class='formula'>SFC = (Wf × 3.6 × 10⁶) / BP (g/kWh)</div>Lower SFC = better fuel economy. A typical petrol engine has SFC ≈ 250–350 g/kWh." },
+      { q: "How is the air flow rate measured using the orifice plate?", a: "<div class='formula'>Q_a = C_d × A_o × √(2gH) m³/s</div><div class='formula'>H = (h/100) × (ρ_m/ρ_a) metres of air</div>where h = manometer reading (cm), ρ_m = density of manometric fluid (water = 1000 kg/m³), ρ_a = density of air." },
+      { q: "What is Volumetric Efficiency?", a: "<div class='formula'>η_v = Q_a / Q_t × 100%</div>where Q_t = V_s × N×N_c / (60×n) is the theoretical air consumption. Volumetric efficiency measures how effectively the engine breathes (fills its cylinder with fresh charge)." },
+      { q: "What is Swept Volume (Displaced Volume)?", a: "<div class='formula'>V_s = (π/4) × D² × L</div>For this engine: D = 66.5 mm, L = 72 mm. V_s per cylinder ≈ 249.8 cm³. Total swept volume = 3 × 249.8 ≈ 749 cc (750 cc engine)." },
+      { q: "What is the compression ratio of this SI engine? Why is it important?", a: "CR = 9.2:1. A higher compression ratio gives better thermal efficiency (higher pressure at the end of compression → more work during expansion). SI engines are limited to ~9–11:1 CR to avoid detonation/knocking of the petrol-air mixture." },
+      { q: "What is the heat balance of an SI engine?", a: "Total heat input from fuel is distributed as: <ul><li>Brake Power (~25–35%)</li><li>Heat to cooling water (~25–30%)</li><li>Heat in exhaust gases (~30–35%)</li><li>Unaccounted losses (radiation, oil cooling, etc.) (~5–10%)</li></ul>" },
+      { q: "What is the difference between a CI engine and an SI engine?", a: "<table style='width:100%;font-size:13px;border-collapse:collapse'><tr style='color:var(--accent)'><td style='padding:4px 8px'>Feature</td><td>SI Engine</td><td>CI Engine</td></tr><tr><td style='padding:3px 8px'>Fuel</td><td>Petrol</td><td>Diesel</td></tr><tr><td style='padding:3px 8px'>Ignition</td><td>Spark plug</td><td>Compression (auto-ignition)</td></tr><tr><td style='padding:3px 8px'>CR</td><td>9–12:1</td><td>16–22:1</td></tr><tr><td style='padding:3px 8px'>Efficiency</td><td>Lower (~30%)</td><td>Higher (~40%)</td></tr><tr><td style='padding:3px 8px'>Mixture</td><td>Pre-mixed</td><td>Direct injection</td></tr></table>" },
+      { q: "What is MPFI (Multi-Point Fuel Injection)?", a: "MPFI is a fuel injection system where <strong>separate injectors</strong> are provided for each cylinder, spraying fuel into the intake port just upstream of the intake valve. This gives more precise fuel metering compared to a carburettor, resulting in better fuel economy, lower emissions, and improved power output." },
+    ]
+  }
+];
+
+// Build nav
+const nav = document.getElementById('navInner');
+experiments.forEach(exp => {
+  const btn = document.createElement('button');
+  btn.className = 'nav-btn';
+  btn.textContent = exp.num + ' ' + exp.title.split('–')[0].split(' ').slice(0,3).join(' ');
+  btn.onclick = () => {
+    document.getElementById(exp.id).scrollIntoView({behavior:'smooth'});
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  };
+  nav.appendChild(btn);
+});
+
+// Build main content
+const main = document.getElementById('main');
+experiments.forEach(exp => {
+  const sec = document.createElement('section');
+  sec.className = 'experiment';
+  sec.id = exp.id;
+
+  sec.innerHTML = `
+    <div class="exp-header">
+      <span class="exp-num">${exp.num}</span>
+      <div>
+        <div class="exp-title">${exp.title}</div>
+        <div class="exp-meta">${exp.meta} · ${exp.qa.length} Questions</div>
+      </div>
+    </div>
+    <div class="exp-actions">
+      <button class="btn-sm" onclick="expandAll('${exp.id}')">Expand All</button>
+      <button class="btn-sm" onclick="collapseAll('${exp.id}')">Collapse All</button>
+    </div>
+    <div class="qa-list" id="qa-${exp.id}">
+      ${exp.qa.map((item, i) => `
+        <div class="qa-card" id="${exp.id}-q${i}">
+          <div class="qa-question" onclick="toggle('${exp.id}-q${i}')">
+            <span class="q-num">Q${String(i+1).padStart(2,'0')}</span>
+            <span class="q-text">${item.q}</span>
+            <span class="q-arrow">▶</span>
+          </div>
+          <div class="qa-answer">${item.a}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  main.appendChild(sec);
+});
+
+function toggle(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+function expandAll(expId) {
+  document.querySelectorAll(`#qa-${expId} .qa-card`).forEach(c => c.classList.add('open'));
+}
+function collapseAll(expId) {
+  document.querySelectorAll(`#qa-${expId} .qa-card`).forEach(c => c.classList.remove('open'));
+}
+
+// Intersection observer for nav highlight
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = experiments.findIndex(e => e.id === entry.target.id);
+      if (idx >= 0) {
+        document.querySelectorAll('.nav-btn').forEach((b,i) => {
+          b.classList.toggle('active', i === idx);
+        });
+      }
+    }
+  });
+}, {rootMargin: '-20% 0px -70% 0px'});
+
+experiments.forEach(exp => {
+  const el = document.getElementById(exp.id);
+  if (el) observer.observe(el);
+});
+</script>
+</body>
+</html>
